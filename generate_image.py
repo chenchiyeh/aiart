@@ -1,42 +1,33 @@
 import os
 import requests
+import base64
+import replicate
 from dotenv import load_dotenv
 
-# Load Hugging Face token from .env file
+# Load API token from .env
 load_dotenv()
-HF_TOKEN = os.getenv("HUGGINGFACE_API_KEY")
+REPLICATE_API_TOKEN = os.getenv("REPLICATE_API_TOKEN")
 
-# API URL for stable-diffusion-v1-5 model
-API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
-HEADERS = {"Authorization": f"Bearer {HF_TOKEN}"}
+# Authenticate
+client = replicate.Client(api_token=REPLICATE_API_TOKEN)
 
-def generate_image(prompt):
-    response = requests.post(API_URL, headers=HEADERS, json={"inputs": prompt})
-    if response.status_code == 200:
-        with open("generated_image.png", "wb") as f:
-            f.write(response.content)
-        print("Image saved as 'generated_image.png'")
-    else:
-        print("Error:", response.status_code, response.text)
+
 
 if __name__ == "__main__":
+    
 
-    preset = (
-        "This image will be used for style transfer. "
-        "1) No human should be wearing the clothing. "
-        "2) Only one clothing item should appear. "
-        "3) Show it on a hanger with a plain white background. "
-        "The clothing is: "
+    file_input = open("./clothing.png", "rb")
+
+
+    user_prompt = input("🧥 Describe your edit: ")
+    input = {
+        "image": file_input,
+        "prompt":user_prompt
+    }
+
+    output = replicate.run(
+        "zsxkib/step1x-edit:12b5a5a61e3419f792eb56cfc16eed046252740ebf5d470228f9b4cf2c861610",
+        input=input
     )
-  
-
-
-    user_input = input("🧥 Describe your clothing piece: ")
-    prompt = preset + user_input
-
-    print(f"📸 Generating clothing image...")
-    generate_image(prompt)
-
-
-
-
+    with open("output.webp", "wb") as file:
+        file.write(output.read())
