@@ -1,0 +1,38 @@
+body {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background: #f0f0f0;
+  }
+  
+  #avatar-area {
+    position: relative;
+    width: 200px;
+  }
+  
+  #avatar {
+    width: 100%;
+  }
+  
+  #clothing-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+  
+  #closet {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  
+  .clothing-item {
+    width: 100px;
+    cursor: pointer;
+    border: 2px solid transparent;
+  }
+  
+  .clothing-item:hover {
+    border-color: blue;
+  }
+  
