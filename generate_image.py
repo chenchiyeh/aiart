@@ -15,14 +15,13 @@ client = replicate.Client(api_token=REPLICATE_API_TOKEN)
 
 if __name__ == "__main__":
     
-
     file_input = open("./clothing.png", "rb")
 
-
     user_prompt = input("🧥 Describe your edit: ")
+    user_prompt = "Make this clothing piece cartoon style"
     input = {
         "image": file_input,
-        "prompt":user_prompt
+        "prompt": user_prompt
     }
 
     output = replicate.run(

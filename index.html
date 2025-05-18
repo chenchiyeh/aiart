@@ -1,24 +1,45 @@
-<!-- frontend/index.html -->
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8">
   <title>Virtual Closet</title>
-  <link rel="stylesheet" href="styles.css">
+  <style>
+    img {
+      max-width: 300px;
+      display: block;
+      margin: 10px auto;
+    }
+  </style>
 </head>
 <body>
-  <h1>👕 Virtual Closet</h1>
-  <div id="avatar">
-    <img id="avatar-img" src="avatar_output/default_avatar.png" alt="Avatar" />
+  <h2 style="text-align: center;">Virtual Closet Demo</h2>
+
+  <!-- Image preview -->
+  <div style="text-align: center;">
+    <img id="result" src="" alt="Result will appear here">
   </div>
 
-  <h2>Your Closet</h2>
-  <div id="closet">
-    <img class="clothing-item" src="clothing_items/shirt1.png" alt="Shirt 1" data-name="shirt1.png">
-    <img class="clothing-item" src="clothing_items/shirt2.png" alt="Shirt 2" data-name="shirt2.png">
-    <!-- Add more items -->
+  <div style="text-align: center;">
+    <button onclick="combineImages()">Generate Avatar Outfit</button>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    async function combineImages() {
+      const avatarFile = await fetch('/mnt/data/avatar.png').then(res => res.blob());
+      const clothingFile = await fetch('/mnt/data/output.webp').then(res => res.blob());
+
+      const formData = new FormData();
+      formData.append('avatar', new File([avatarFile], 'avatar.png'));
+      formData.append('clothing', new File([clothingFile], 'output.webp'));
+
+      const response = await fetch("http://127.0.0.1:8000/combine", {
+        method: "POST",
+        body: formData
+      });
+
+      const data = await response.json();
+      const base64Image = data.image;
+      document.getElementById("result").src = `data:image/png;base64,${base64Image}`;
+    }
+  </script>
 </body>
 </html>
